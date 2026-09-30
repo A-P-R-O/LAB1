@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторна робота №1 - Таксопарк</title>
+</head>
+<body>
+
+  <h1>Система керування таксопарком</h1>
+
+  <!-- Контейнер для кнопок-табів (буде заповнено скріптом) -->
+  <div id="tabs-navigation"></div>
+
+  <hr>
+
+  <!-- Контейнер для таблиць (буде заповнено скріптом) -->
+  <div id="tables-container"></div>
+
+  <script>
+    /**
+     * Дані предметної області (чистий JavaScript)
+     * Кожна сутність містить заголовок, назви колонок і масив записів
+     */
+    const domainData = {
+      drivers: {
+        title: "Водії",
+        columns: ["ID", "ПІБ", "Посвідчення", "Телефон", "Рейтинг", "Статус"],
+        items: [
+          { id: 1, name: "Кравченко Василь Олексійович", license: "BXT-102938", phone: "+380501112233", rating: 4.95, status: "На лінії" },
+          { id: 2, name: "Мельничук Олег Сергійович", license: "BXT-204958", phone: "+380672223344", rating: 4.82, status: "Вихідний" },
+          { id: 3, name: "Григоренко Іван Денисович", license: "BXT-394857", phone: "+380933334455", rating: 4.98, status: "На зміні" }
+        ]
+      },
+      cars: {
+        title: "Автомобілі",
+        columns: ["ID", "Марка / Модель", "Держ. номер", "Рік", "Клас авто", "Пробіг (км)"],
+        items: [
+          { id: 101, model: "Toyota Camry", plate: "BH 1234 CT", year: 2021, category: "Комфорт+", mileage: 85000 },
+          { id: 102, model: "Renault Megane", plate: "BH 5678 AA", year: 2019, category: "Стандарт", mileage: 142000 },
+          { id: 103, model: "Volkswagen Passat", plate: "BH 9988 OE", year: 2022, category: "Бізнес", mileage: 48000 }
+        ]
+      },
+      orders: {
+        title: "Замовлення",
+        columns: ["№ Замовлення", "Водій", "Маршрут (Звідки -> Куди)", "Тариф", "Вартість (грн)", "Статус"],
+        items: [
+          { id: 7001, driver: "Кравченко В. О.", route: "вул. Дерибасівська, 1 -> Аеропорт", tariff: "Комфорт+", price: 320, state: "Виконано" },
+          { id: 7002, driver: "Григоренко І. Д.", route: "Залізничний вокзал -> Аркадія", tariff: "Бізнес", price: 280, state: "У дорозі" },
+          { id: 7003, driver: "Кравченко В. О.", route: "просп. Шевченка, 12 -> вул. Балківська, 35", tariff: "Стандарт", price: 160, state: "Прийнято" }
+        ]
+      }
+    };
+
+    /**
+     * Функція генерації DOM-елемента таблиці за заданими метаданими сутності
+     */
+    function renderTable(entityKey, entityConfig) {
+      const wrapper = document.createElement("div");
+      wrapper.id = `tab-content-${entityKey}`;
+      wrapper.style.display = "none"; // За замовчуванням приховано
+
+      const heading = document.createElement("h2");
+      heading.textContent = `Список: ${entityConfig.title}`;
+      wrapper.appendChild(heading);
+
+      const table = document.createElement("table");
+      table.setAttribute("border", "1");
+      table.setAttribute("cellpadding", "6");
+      table.setAttribute("cellspacing", "0");
+
+      // Створення шапки таблиці (thead)
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      entityConfig.columns.forEach(colName => {
+        const th = document.createElement("th");
+        th.textContent = colName;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // Створення тіла таблиці (tbody)
+      const tbody = document.createElement("tbody");
+      entityConfig.items.forEach(record => {
+        const row = document.createElement("tr");
+        Object.values(record).forEach(val => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          row.appendChild(td);
+        });
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+
+      return wrapper;
+    }
+
+    /**
+     * Функція перемикання активного табу
+     */
+    function setActiveTab(activeKey) {
+      // 1. Приховуємо або показуємо відповідні блоки таблиць
+      Object.keys(domainData).forEach(key => {
+        const contentBlock = document.getElementById(`tab-content-${key}`);
+        if (contentBlock) {
+          contentBlock.style.display = (key === activeKey) ? "block" : "none";
+        }
+      });
+
+      // 2. Оновлюємо візуальний стан кнопок через JS-властивості стилю
+      const allButtons = document.querySelectorAll(".tab-switch-btn");
+      allButtons.forEach(btn => {
+        if (btn.dataset.targetKey === activeKey) {
+          btn.style.fontWeight = "bold";
+          btn.style.backgroundColor = "#e0e0e0";
+        } else {
+          btn.style.fontWeight = "normal";
+          btn.style.backgroundColor = "";
+        }
+      });
+    }
+
+    /**
+     * Ініціалізація додатку при завантаженні сторінки
+     */
+    function initTabsApp() {
+      const navContainer = document.getElementById("tabs-navigation");
+      const tablesContainer = document.getElementById("tables-container");
+
+      const entityKeys = Object.keys(domainData);
+
+      // Генерація таб-кнопок і самих таблиць
+      entityKeys.forEach(key => {
+        const entity = domainData[key];
+
+        // Створення кнопки табу
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tab-switch-btn";
+        btn.dataset.targetKey = key;
+        btn.textContent = entity.title;
+        btn.style.marginRight = "8px";
+        btn.style.padding = "6px 14px";
+        btn.style.cursor = "pointer";
+
+        // Подія перемикання (Event Listener)
+        btn.addEventListener("click", () => {
+          setActiveTab(key);
+        });
+
+        navContainer.appendChild(btn);
+
+        // Генерація та додавання таблиці в контейнер
+        const tableElement = renderTable(key, entity);
+        tablesContainer.appendChild(tableElement);
+      });
+
+      // Встановлюємо першу вкладку активною за замовчуванням
+      if (entityKeys.length > 0) {
+        setActiveTab(entityKeys[0]);
+      }
+    }
+
+    // Запуск після завантаження DOM дерева
+    document.addEventListener("DOMContentLoaded", initTabsApp);
+  </script>
+
+</body>
+</html>
