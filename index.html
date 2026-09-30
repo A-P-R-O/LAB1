@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторна робота №1</title>
+  <style>
+    /* Базові стилі для видимості вкладок */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .tab-btn.active {
+      font-weight: bold;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 6px 10px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Система обліку медичного центру</h1>
+
+  <!-- Кнопки перемикання вкладок (табів) -->
+  <div id="tabs-container">
+    <button class="tab-btn active" onclick="switchTab('doctors', this)">Лікарі</button>
+    <button class="tab-btn" onclick="switchTab('patients', this)">Пацієнти</button>
+    <button class="tab-btn" onclick="switchTab('appointments', this)">Записи на прийом</button>
+  </div>
+
+  <hr>
+
+  <!-- Таблиця 1: Лікарі -->
+  <div id="doctors" class="tab-content active">
+    <h2>Список лікарів</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ПІБ</th>
+          <th>Спеціалізація</th>
+          <th>Кабінет</th>
+          <th>Графік роботи</th>
+          <th>Стаж (років)</th>
+          <th>Телефон</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Коваленко Олександр Сергійович</td>
+          <td>Кардіолог</td>
+          <td>204</td>
+          <td>08:00 - 14:00</td>
+          <td>12</td>
+          <td>+380501112233</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Мельник Олена Вікторівна</td>
+          <td>Невролог</td>
+          <td>308</td>
+          <td>14:00 - 20:00</td>
+          <td>8</td>
+          <td>+380672223344</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Шевченко Андрій Ігорович</td>
+          <td>Травматолог</td>
+          <td>105</td>
+          <td>09:00 - 17:00</td>
+          <td>15</td>
+          <td>+380933334455</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Таблиця 2: Пацієнти -->
+  <div id="patients" class="tab-content">
+    <h2>Список пацієнтів</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ПІБ</th>
+          <th>Дата народження</th>
+          <th>Стать</th>
+          <th>Номер картки</th>
+          <th>Адреса</th>
+          <th>Група крові</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>101</td>
+          <td>Бондар Ірина Василівна</td>
+          <td>14.05.1988</td>
+          <td>Жіноча</td>
+          <td>MC-90412</td>
+          <td>вул. Дерибасівська, 12, кв. 4</td>
+          <td>A(II) Rh+</td>
+        </tr>
+        <tr>
+          <td>102</td>
+          <td>Ткачук Сергій Миколайович</td>
+          <td>22.11.1975</td>
+          <td>Чоловіча</td>
+          <td>MC-90413</td>
+          <td>вул. Садова, 5, кв. 18</td>
+          <td>O(I) Rh-</td>
+        </tr>
+        <tr>
+          <td>103</td>
+          <td>Лисенко Марина Петрівна</td>
+          <td>03.02.1995</td>
+          <td>Жіноча</td>
+          <td>MC-90414</td>
+          <td>просп. Шевченка, 41, кв. 72</td>
+          <td>B(III) Rh+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Таблиця 3: Записи на прийом -->
+  <div id="appointments" class="tab-content">
+    <h2>Журнал прийомів</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID запису</th>
+          <th>Дата та час</th>
+          <th>Пацієнт</th>
+          <th>Лікар</th>
+          <th>Тип візиту</th>
+          <th>Попередній діагноз</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>5001</td>
+          <td>29.09.2026 09:30</td>
+          <td>Бондар Ірина Василівна</td>
+          <td>Коваленко Олександр Сергійович</td>
+          <td>Первинний</td>
+          <td>Гіпертонія</td>
+          <td>Завершено</td>
+        </tr>
+        <tr>
+          <td>5002</td>
+          <td>29.09.2026 14:15</td>
+          <td>Ткачук Сергій Миколайович</td>
+          <td>Мельник Олена Вікторівна</td>
+          <td>Консультація</td>
+          <td>Мігрень</td>
+          <td>Очікується</td>
+        </tr>
+        <tr>
+          <td>5003</td>
+          <td>30.09.2026 11:00</td>
+          <td>Лисенко Марина Петрівна</td>
+          <td>Шевченко Андрій Ігорович</td>
+          <td>Повторний</td>
+          <td>Розтягнення зв'язок</td>
+          <td>Заплановано</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Логіка перемикання вкладок на чистому JS -->
+  <script>
+    function switchTab(tabId, clickedBtn) {
+      // 1. Приховуємо всі блоки з таблицями
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // 2. Знімаємо активний стан з усіх кнопок
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // 3. Показуємо обрану таблицю та робимо кнопку активною
+      const activeContent = document.getElementById(tabId);
+      if (activeContent) {
+        activeContent.classList.add('active');
+      }
+      clickedBtn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
