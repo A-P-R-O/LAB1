@@ -18,7 +18,7 @@
 
   <script>
     /**
-     * Дані предметної області (чистий JavaScript)
+     * Дані предметної області (JavaScript)
      * Кожна сутність містить заголовок, назви колонок і масив записів
      */
     const domainData = {
@@ -136,7 +136,7 @@
       entityKeys.forEach(key => {
         const entity = domainData[key];
 
-        // Створення кнопки табу
+        // Створення кнопки таб
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "tab-switch-btn";
